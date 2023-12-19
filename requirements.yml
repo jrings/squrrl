@@ -1,0 +1,10 @@
+name: squrrl
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - jupyterlab
+  - pymilvus
+  - sentence-transformers
+  - pre-commit
+prefix: /home/jrings/mambaforge/envs/squrrl
