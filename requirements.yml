@@ -1,10 +1,21 @@
 name: squrrl
 channels:
+  - pytorch
+  - nvidia
   - conda-forge
 dependencies:
   - python=3.11
   - jupyterlab
-  - pymilvus
-  - sentence-transformers
+  - loguru
+  - pip
   - pre-commit
-prefix: /home/jrings/mambaforge/envs/squrrl
+  - pytorch    
+  - pytorch-cuda=12.1
+  - torchaudio
+  - torchvision
+  - sentence-transformers
+  - toml
+  - typer
+  - pip:
+    - fasttext-langdetect
+    - pymilvus==2.3.4
