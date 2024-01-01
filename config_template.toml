@@ -1,5 +1,7 @@
 [base]
 directory = "/path/to/base/directory"
+chunk_size = 5000
+transformer_model = "all-MiniLM-L6-v2"
 
 [server]
 host = "localhost"

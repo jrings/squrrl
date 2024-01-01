@@ -51,8 +51,11 @@ def read_entry(entry: str, i: int, authors: AuthorCollection) -> Optional[Book]:
         return None
     try:
         ref = entry["authors"][0]["author"]["key"]
-    except KeyError:
-        return None
+    except (KeyError, IndexError):
+        try:
+            ref = entry["authors"][0]["key"]
+        except (KeyError, IndexError):
+            return None
 
     desc = (
         entry["description"]["value"]
@@ -126,8 +129,9 @@ def insert_books(config: dict, authors: AuthorCollection, books: list[Book]) -> 
         validate_fields(fields)
         insert_result = open_library.insert(fields)
         log.debug(insert_result)
+    log.info("Creating Index")
     index = {
-        "index_type": "IVF_FLAT",
+        "index_type": "FLAT",
         "metric_type": "L2",
         "params": {"nlist": 128},
     }

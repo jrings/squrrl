@@ -13,9 +13,12 @@ dependencies:
   - pytorch-cuda=12.1
   - torchaudio
   - torchvision
+  - seaborn
   - sentence-transformers
   - toml
   - typer
+  - umap-learn
   - pip:
     - fasttext-langdetect
     - pymilvus==2.3.4
+    - scikit-tda
