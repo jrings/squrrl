@@ -28,7 +28,7 @@ def load_authors(config: dict) -> dict:
     with open(author_fname, "rb") as f:
         num_lines = sum(1 for _ in f)
     with open(author_fname, "r") as _in:
-        for i, line in tqdm(enumerate(_in), total=num_lines):
+        for i, line in tqdm(enumerate(_in), total=num_lines, position=0, leave=True):
             pp = line[1:-1].split(",")
             a = Author(name=",".join(pp[1:]).strip(), aid=i, reference=pp[0])
             authors.append(a)
@@ -69,7 +69,7 @@ def read_entry(entry: str, i: int, authors: AuthorCollection) -> Optional[Book]:
     try:
         author = authors.find(ref)
     except KeyError:
-        log.debug(f"Could not find author with reference {ref}")
+        # log.debug(f"Could not find author with reference {ref}")
         return None
     return Book(title=entry["title"], author=author, bid=i, description=desc)
 
@@ -86,7 +86,7 @@ def load_data(config: dict) -> tuple[AuthorCollection, list[Book]]:
     with open(works_fname, "r") as _in:
         books.extend(
             read_entry(line.strip(), i, authors)
-            for i, line in tqdm(enumerate(_in), total=num_lines)
+            for i, line in tqdm(enumerate(_in), total=num_lines, position=0, leave=True)
         )
     books = [b for b in books if b is not None]
     log.info(f"Found {len(books)} books")
@@ -118,7 +118,11 @@ def insert_books(config: dict, authors: AuthorCollection, books: list[Book]) -> 
     open_library = Collection("open_library", schema)
     chunk = config.get("base", {}).get("chunk_size", 10000)
     for i in trange(
-        config.get("base", {}).get("insert_startpoint", 0), len(books) + 1, chunk
+        config.get("base", {}).get("insert_startpoint", 0),
+        len(books) + 1,
+        chunk,
+        position=0,
+        leave=True,
     ):
         book_chunk = books[i : i + chunk]
         fields = [
@@ -132,8 +136,8 @@ def insert_books(config: dict, authors: AuthorCollection, books: list[Book]) -> 
     log.info("Creating Index")
     index = {
         "index_type": "FLAT",
-        "metric_type": "L2",
-        "params": {"nlist": 128},
+        "metric_type": "COSINE",
+        "params": {"nlist": 32768},
     }
     open_library.create_index("description", index)
     log.info("Done!")

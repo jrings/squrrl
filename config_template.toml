@@ -6,3 +6,6 @@ transformer_model = "all-MiniLM-L6-v2"
 [server]
 host = "localhost"
 port = 8080
+
+[openai]
+secret_key = "OPENAI_API_KEY"

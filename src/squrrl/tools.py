@@ -7,5 +7,5 @@ log.remove()
 log.add(
     sys.stdout,
     colorize=True,
-    format="<blue>{time:HH:mm:ss}</blue> <fg 255>{module}:{function}:{line} | </fg 255><level>{message}</level>",
+    format="<m>{time:HH:mm:ss}</m> <c>{module}:{function}:{line} | </c><level>{message}</level>",
 )
