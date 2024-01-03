@@ -65,3 +65,47 @@ class AuthorCollection:
             return self.author_lk_by_ref[ref]
         else:
             return self.author_lk_by_id[ref]
+
+
+class BookCollection:
+    _books: list[Book] = []
+    book_lk_by_id: dict[int, Book] = {}
+
+    def __init__(self, books: Union[Book, list[Book]]):
+        self.add_books(books)
+        self._update_lookups()
+
+    def __len__(self):
+        return len(self._books)
+
+    def _check_valid(self, books: Union[Book, list[Book]]) -> None:
+        """
+        Checks if the given books are valid.
+
+        Args:
+            books: A Book instance or a list of Book instances.
+
+        Raises:
+            TypeError: If books is not a Book instance or a list thereof.
+        """
+        if isinstance(books, list):
+            [self._check_valid(b) for b in books]
+        elif not isinstance(books, Book):
+            raise TypeError("books must be a Book instance or list thereof")
+        return True
+
+    def _update_lookups(self):
+        """Updates the book lookup dictionaries."""
+        self.book_lk_by_id = {book.bid: book for book in self._books}
+
+    def add_books(self, books: Union[Book, list[Book]]) -> None:
+        self._check_valid(books)
+        if isinstance(books, Book):
+            self._books.append(books)
+        else:
+            self._books.extend(books)
+        self._update_lookups()
+
+    def find(self, ref: int) -> Book:
+        """Find book instance by bid."""
+        return self.book_lk_by_id[ref]
